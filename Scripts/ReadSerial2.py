@@ -42,9 +42,9 @@ import select
 import time
 
 #ser = serial.Serial('/dev/ttyACM0', 57600)
-ser = serial.Serial('/dev/cu.usbmodem1421', 57600)
+ser = serial.Serial('/dev/cu.usbmodem14101', 57600)
 # Try this little fellow
-ser.read_all()
+# ser.readall()
 
 fs = 200 # At the Arduino
 PlotLength =  5*fs # This seems to slow everything down by ovrflowing a buffer I think
@@ -58,7 +58,7 @@ freqs = np.fft.fftfreq(FFTSize, Ts)
 idx = range(1,int(FFTSize/2))
 # Clear all data inthe Serial buffer
 ser.flush()
-ser.read_all()
+ser.readall()
 # Set up the plotting figure
 fig = plt.figure()
 gs = gridspec.GridSpec(4, 2)
