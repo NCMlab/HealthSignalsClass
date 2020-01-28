@@ -14,8 +14,10 @@ import serial
 import os
 import sys
 import select
+import time
 #ser = serial.Serial('/dev/ttyACM0', 57600)
-ser = serial.Serial('/dev/cu.usbmodem1421', 57600)
+ser = serial.Serial('/dev/cu.usbmodem14101', 19200)
+
 # Try this little fellow
 ser.read_all()
 
@@ -30,7 +32,7 @@ Pos = 0
 FFTSize = 256
 Ts = 1.0/fs
 freqs = np.fft.fftfreq(FFTSize, Ts)
-idx = range(2,FFTSize/2)
+idx = range(2,int(FFTSize/2))
 # Clear all data inthe Serial buffer
 ser.flush()
 ser.read_all()
@@ -39,6 +41,7 @@ ntaps= 7
 #f, (ax1, ax2) = plt.subplots(1, 2, sharey=True)
 #ax1.ion()
 #ax2.ion()
+plt.pause(1)
 while True:
     plt.clf()
     plt.ylim(-100,2000)
@@ -53,10 +56,16 @@ while True:
     NDataPoints = len(data)  
     NDataPoints
     data = data.decode("utf-8").split('\n')
+    
     NDataPoints = len(data)
     print(NDataPoints)
     if NDataPoints >= PlotLength:
         data = data[-1*PlotLength]
+    # elif NDataPoints == 1:
+    #     ser.flush()        
+    #     print('Reopening!')
+        # ser.close()
+        # ser = serial.Serial('/dev/cu.usbmodem14101', 19200)
     count = NDataPoints
     # Take the data that already exists in the array and move it
     tempAlldata[0:(PlotLength-NDataPoints)] = tempAlldata[(NDataPoints):]
@@ -92,17 +101,19 @@ while True:
 #    MeanData = np.mean(tempAlldata)
 #    tempAlldata = tempAlldata - MeanData
     #conv_result = sig_convolve(tempAlldata, b[np.newaxis, :], mode='valid') 
+
     ps = np.abs(np.fft.fft(tempAlldata[-FFTSize:]))
-    h = plt.plot(freqs[idx],ps[idx])
-    #h = plt.plot(tempAlldata)
+    
+    #h = plt.plot(freqs[idx],ps[idx])
+    h = plt.plot(tempAlldata)
     plt.setp(h,linewidth=1)
     plt.draw()
 
 
+    plt.pause(0.9)
+    # time.sleep(1)
 
-    plt.pause(0.3)
-
-    if sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
-        line = raw_input()
-        break
+    # if sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
+    #     line = raw_input()
+    #     break
 
