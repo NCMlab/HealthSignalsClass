@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+ 
 from threading import Thread
 import serial
 import time
@@ -7,9 +9,9 @@ import matplotlib.animation as animation
 import struct
 import pandas as pd
  
- # ser = serial.Serial('/dev/cu.usbmodem14101', 57600)
+ 
 class serialPlot:
-    def __init__(self, serialPort = '/dev/cu.usbmodem14101', serialBaud = 57600, plotLength = 100, dataNumBytes = 2):
+    def __init__(self, serialPort = '/dev/ttyUSB0', serialBaud = 38400, plotLength = 100, dataNumBytes = 2):
         self.port = serialPort
         self.baud = serialBaud
         self.plotMaxLength = plotLength
@@ -79,8 +81,8 @@ def main():
     pltInterval = 50    # Period at which the plot animation updates [ms]
     xmin = 0
     xmax = maxPlotLength
-    ymin = -(10)
-    ymax = 10
+    ymin = -(1000)
+    ymax = 1000
     fig = plt.figure()
     ax = plt.axes(xlim=(xmin, xmax), ylim=(float(ymin - (ymax - ymin) / 10), float(ymax + (ymax - ymin) / 10)))
     ax.set_title('Arduino Analog Read')
@@ -96,7 +98,7 @@ def main():
     plt.legend(loc="upper left")
     plt.show()
  
-    s.close()
+    # s.close()
  
  
 if __name__ == '__main__':
